@@ -1,0 +1,130 @@
+\ProvidesPackage{Dependency}
+
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{pifont}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{lmodern}
+\RequirePackage{hyperref}
+\RequirePackage{etoolbox}
+\RequirePackage{ifthen}
+\RequirePackage{ctex}
+\RequirePackage{listings}
+\usefonttheme[onlymath]{serif}
+%\RequirePackage[margin=3cm]{geometry}
+\RequirePackage{ragged2e}
+\RequirePackage{fourier}
+\RequirePackage{tikz} 
+\usetikzlibrary{chains,shapes.arrows,fit}
+
+\definecolor{arrowcolor}{RGB}{201,216,232}% color for the arrow filling
+\definecolor{circlecolor}{RGB}{79,129,189}% color for the inner circles filling
+\colorlet{textcolor}{white}% color for the text inside the circles
+\colorlet{bordercolor}{white}% color for the outer border of circles
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+\newcounter{task}
+
+\newlength\taskwidth% width of the box for the task description
+\newlength\taskvsep% vertical distance between the task description and arrow
+
+\setlength\taskwidth{3cm}
+\setlength\taskvsep{18pt}
+
+\def\taskpos{}
+\def\taskanchor{}
+
+\newcommand\task[1]{%
+  {\parbox[t]{\taskwidth}{\scriptsize\Centering#1}}}
+
+\tikzset{
+inner/.style={
+  on chain,
+  circle,
+  inner sep=7pt,
+  fill=circlecolor,
+  line width=1pt,
+  draw=bordercolor,
+  text width=1em,
+  align=center,
+  text height=1ex,
+  text depth=0ex
+},
+on grid
+}
+
+
+\newcommand\Task[2][]{%
+\node[inner xsep=0pt] (c1) {\phantom{A}};
+\stepcounter{task}
+\ifodd\thetask\relax
+  \renewcommand\taskpos{\taskvsep}\renewcommand\taskanchor{south}
+\else
+  \renewcommand\taskpos{-\taskvsep}\renewcommand\taskanchor{north}
+\fi
+\node[inner,font=\footnotesize\sffamily\color{textcolor}]    
+  (c\the\numexpr\value{task}+1\relax) {#1};
+\node[anchor=\taskanchor,yshift={\taskpos*2}] 
+  at (c\the\numexpr\value{task}+1\relax) (x) {\task{#2}};
+\draw[blue] (c\the\numexpr\value{task}+1\relax) -- (x);
+}
+
+\newcommand\drawarrow{% the arrow is placed in the background layer 
+                                                     % after the node for the tasks have been placed
+\ifnum\thetask=0\relax
+  \node[on chain] (c1) {}; % if no \Task command is used, the arrow will be drawn
+\fi
+\node[on chain] (f) {};
+\begin{pgfonlayer}{background}
+\node[
+  inner sep=10pt,
+  single arrow,
+  single arrow head extend=0.4cm,
+  draw=none,
+  fill=arrowcolor,
+  fit= (c1) (f)
+] (arrow) {};
+\fill[white] % the decoration at the tail of the arrow
+  (arrow.before tail) -- (c1|-arrow.west) -- (arrow.after tail) -- cycle;
+\end{pgfonlayer}
+}
+
+\newenvironment{timeline}[1][node distance=1\taskwidth]
+  {\par\noindent\begin{tikzpicture}[start chain,#1]}
+  {\drawarrow\end{tikzpicture}\par}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\renewcommand{\figurename}{Fig.}
+\newboolean{sectiontoc}
+\setboolean{sectiontoc}{true} % default to true
+
+% ---------------  Define theme and color scheme  -----------------
+\usetheme[sidebarleft]{SGX}  % 3 options: minimal, sidebarleft, sidebarright
+\setbeamertemplate{section in toc}{\hspace*{1em}\inserttocsection}
+\setbeamertemplate{subsection in toc}{\hspace*{2em}\inserttocsubsection\\}
+\setbeamertemplate{caption}[numbered]
+\setbeamercolor{alerted text}{fg=Dandelion}
+\makeatletter
+  \setbeamertemplate{sidebar \beamer@sidebarside}%{sidebar theme}
+  {
+    \beamer@tempdim=\beamer@sidebarwidth%
+    \advance\beamer@tempdim by -6pt%
+    \insertverticalnavigation{\beamer@sidebarwidth}%
+    \vfill
+    \ifx\beamer@sidebarside\beamer@lefttext%
+    \else%
+      \usebeamercolor{normal text}%
+      \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+      \vskip2pt%
+    \fi%
+  }%
+\makeatother

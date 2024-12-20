@@ -1,0 +1,136 @@
+\documentclass[hyperref={bookmarks=false},aspectratio=169, usenames,dvipsnames, hideothersubsections]{beamer}
+\usepackage{Dependency}
+%\setbeamertemplate{footline}[frame number]
+
+% ------------  Information on the title page  --------------------
+\title[SGX-Beamer] % This appears on the sidebar and footer 这里在侧边栏和页脚显示
+{\bfseries{SGX-Beamer}} % Title of the presentation, appears on the title slide 在主页显示
+
+\subtitle{测试副标题} % Subtitle appears in the slide
+
+\author[孙更欣] % This appears on the side bar
+{孙更欣\inst{1}}
+
+\institute[SDU]  % This appears on footer
+{
+  \inst{1}
+  计算机科学与技术学院\\ % This appears in the slide
+  山东大学
+}
+
+\date[\today] % Purpose and Date of the Presentation, appears on the footer
+{Purpose of the Presentation and/or Venue} %% Appears in the slide
+%------------------------------------------------------------
+
+%------------------------------------------------------------
+%The next block of commands puts the table of contents at the 
+%beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \ifthenelse{\boolean{sectiontoc}}{
+    \begin{frame}%[noframenumbering]
+      \frametitle{章节预览}
+      \Large\tableofcontents[sections=\value{section}]
+      \normalsize
+    \end{frame}
+  }
+}
+%------------------------------------------------------------
+
+\newcommand{\toclesssection}[1]{
+  \setboolean{sectiontoc}{false}
+  \section{#1}
+  \setboolean{sectiontoc}{true}
+}
+
+\begin{document}
+
+\frame{\titlepage}  % Creates title page
+
+%---------   table of contents after title page  ------------
+\begin{frame}
+\frametitle{Presentation Overview}
+\tableofcontents
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Subtopic 1}
+%---------------------------------------------------------
+%Changing the visibility of the text
+\begin{frame}
+\frametitle{Details under subtopic 1}
+测试中文119$119$ 。 % Testing Chinese characters
+\begin{itemize} % The slides will keep adding one point per slide
+    \item<1-> Some details to provide context. 
+    \item<2-> Further details followed by the previous context.
+    \item<3-> Some examples followed by the previous information.
+\end{itemize}
+\end{frame}
+
+\subsection{Subtopic 1.1}
+\begin{frame}
+\frametitle{Details under subtopic 1.1}
+测试一下子目录。
+\end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+%\begin{frame}  % Example of the \pause command
+%This slide is to test mathematical formulas \pause
+%
+%$$E=mc^2$$ \pause
+%
+%as well as the ``pause'' functionality
+%\end{frame}
+%---------------------------------------------------------
+
+\section{Subtopic 2}
+
+%---------------------------------------------------------
+%Highlighting text
+\begin{frame}
+\frametitle{Subtopic 2}
+
+This is a brief introduction of \alert{Subtopic 2}. % Alert makes things prominent
+
+\begin{block}{Terminology}
+Some definitions for the terminology are here.
+\end{block}
+
+\begin{alertblock}{Context}
+Some information to provide context here.
+\end{alertblock}
+
+\begin{examples}
+See the next slide for a two-column example.
+\end{examples}
+\end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+%Two columns
+\begin{frame}
+\frametitle{Two Column Section}
+
+\frametitle{Two Column Section}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. 
+
+\column{0.55\textwidth}
+Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.
+\end{columns}
+
+It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+
+\end{frame}
+%---------------------------------------------------------
+
+
+\end{document}
